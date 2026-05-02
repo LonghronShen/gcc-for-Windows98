@@ -1,0 +1,52 @@
+{
+    "matrix": [
+        {
+            "version": "gcc-11.1.0",
+            "components": [
+                {
+                    "gcc": {
+                        "source": "https://github.com/gcc-mirror/gcc.git",
+                        "commit": "releases/gcc-11.1.0",
+                        "version": "11.1.0"
+                    }
+                },
+                {
+                    "binutils": {
+                        "source": "https://sourceware.org/git/binutils-gdb.git",
+                        "commit": "binutils-2_36_1",
+                        "version": "2.36.1"
+                    }
+                },
+                {
+                    "mingw-w64": {
+                        "source": "https://github.com/mirror/mingw-w64.git",
+                        "commit": "93f3505a758fe70e56678f00e753af3bc4f640bb",
+                        "version": "master"
+                    }
+                },
+                {
+                    "pthread9x": {
+                        "source": "https://github.com/JHRobotics/pthread9x",
+                        "commit": "399a62423df2cfd3288a76a916c814832f2b88bd",
+                        "version": "master"
+                    }
+                },
+                {
+                    "gmp": {
+                        "version": "v6.2.1"
+                    }
+                },
+                {
+                    "mpfr": {
+                        "version": "4.1.0"
+                    }
+                },
+                {
+                    "mpc": {
+                        "version": "1.2.1"
+                    }
+                }
+            ]
+        }
+    ]
+}

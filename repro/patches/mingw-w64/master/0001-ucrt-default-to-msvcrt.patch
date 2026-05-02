@@ -1,0 +1,13 @@
+diff --git a/mingw-w64-crt/configure.ac b/mingw-w64-crt/configure.ac
+index 37851f6..4417763 100644
+--- a/mingw-w64-crt/configure.ac
++++ b/mingw-w64-crt/configure.ac
+@@ -256,7 +256,7 @@ AC_ARG_WITH([default-msvcrt],
+   [AS_HELP_STRING([--with-default-msvcrt=LIB],
+     [Lib to provide as libmsvcrt.a (default: ucrt)])],
+   [],
+-  [with_default_msvcrt=ucrt])
++  [with_default_msvcrt=msvcrt-os])
+ if test "$with_default_msvcrt" = "msvcrt"; then
+   with_default_msvcrt=msvcrt-os
+ fi

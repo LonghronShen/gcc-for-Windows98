@@ -1,0 +1,31 @@
+diff --git a/libstdc++-v3/libsupc++/atexit_thread.cc b/libstdc++-v3/libsupc++/atexit_thread.cc
+index 7ea2773f7..657e3f442 100644
+--- a/libstdc++-v3/libsupc++/atexit_thread.cc
++++ b/libstdc++-v3/libsupc++/atexit_thread.cc
+@@ -26,8 +26,6 @@
+ #include <new>
+ #include "bits/gthr.h"
+ #ifdef _GLIBCXX_THREAD_ATEXIT_WIN32
+-#define WIN32_LEAN_AND_MEAN
+-#include <windows.h>
+ #endif
+ 
+ // Simplify it a little for this file.
+@@ -61,7 +59,6 @@ namespace {
+     void *object;
+     elt *next;
+ #ifdef _GLIBCXX_THREAD_ATEXIT_WIN32
+-    HMODULE dll;
+ #endif
+   };
+ 
+@@ -79,9 +76,6 @@ namespace {
+ 	elt *old_e = e;
+ 	e->destructor (e->object);
+ #ifdef _GLIBCXX_THREAD_ATEXIT_WIN32
+-	/* Decrement DLL count */
+-	if (e->dll)
+-	  FreeLibrary (e->dll);
+ #endif
+ 	e = e->next;
+ 	delete (old_e);

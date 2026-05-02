@@ -1,0 +1,15 @@
+.env
+
+.status-*
+
+*.dll
+*.exe
+*.so
+
+build/
+out/
+
+tmp/
+src/
+
+*.txt

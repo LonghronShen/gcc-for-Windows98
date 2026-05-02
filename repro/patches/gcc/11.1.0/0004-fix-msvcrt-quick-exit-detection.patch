@@ -1,0 +1,292 @@
+diff --git a/libstdc++-v3/configure b/libstdc++-v3/configure
+index 326a279c5..22ae6f5f1 100755
+--- a/libstdc++-v3/configure
++++ b/libstdc++-v3/configure
+@@ -27879,7 +27879,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -27902,7 +27902,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -27937,7 +27937,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -27960,7 +27960,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -35083,7 +35083,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -35106,7 +35106,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -35141,7 +35141,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -35164,7 +35164,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -41015,7 +41015,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -41038,7 +41038,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -41073,7 +41073,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -41096,7 +41096,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -47002,7 +47002,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -47025,7 +47025,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -47060,7 +47060,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -47083,7 +47083,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -53707,7 +53707,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -53730,7 +53730,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -53765,7 +53765,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -53788,7 +53788,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -60095,7 +60095,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -60118,7 +60118,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -60153,7 +60153,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -60176,7 +60176,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -66474,7 +66474,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -66497,7 +66497,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -66532,7 +66532,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -66555,7 +66555,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -72278,7 +72278,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_at_quick_exit_use=yes
++  glibcxx_cv_func_at_quick_exit_use=no
+ else
+   glibcxx_cv_func_at_quick_exit_use=no
+ fi
+@@ -72301,7 +72301,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "at_quick_exit" "ac_cv_func_at_quick_exit"
+ if test "x$ac_cv_func_at_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_AT_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_AT_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi
+@@ -72336,7 +72336,7 @@ main ()
+ }
+ _ACEOF
+ if ac_fn_cxx_try_compile "$LINENO"; then :
+-  glibcxx_cv_func_quick_exit_use=yes
++  glibcxx_cv_func_quick_exit_use=no
+ else
+   glibcxx_cv_func_quick_exit_use=no
+ fi
+@@ -72359,7 +72359,7 @@ do :
+   ac_fn_c_check_func "$LINENO" "quick_exit" "ac_cv_func_quick_exit"
+ if test "x$ac_cv_func_quick_exit" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define HAVE_QUICK_EXIT 1
++/* win98 repro disabled: #define HAVE_QUICK_EXIT 1 */
+ _ACEOF
+ 
+ fi

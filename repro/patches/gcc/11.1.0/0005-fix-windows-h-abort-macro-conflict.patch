@@ -1,0 +1,64 @@
+diff --git a/gcc/diagnostic-color.c b/gcc/diagnostic-color.c
+index 1fc5a9079..7c000be35 100644
+--- a/gcc/diagnostic-color.c
++++ b/gcc/diagnostic-color.c
+@@ -22,7 +22,14 @@
+ #include "diagnostic-url.h"
+ 
+ #ifdef __MINGW32__
++/* msxml.h (pulled in via windows.h -> urlmon.h) declares COM methods named
++   'abort', which clash with GCC's '#define abort() fancy_abort(...)' from
++   system.h.  Temporarily suppress the macro while processing Windows SDK
++   headers, then restore it afterwards.  */
++#pragma push_macro("abort")
++#undef abort
+ #  include <windows.h>
++#pragma pop_macro("abort")
+ #endif
+ 
+ #include "color-macros.h"
+diff --git a/gcc/plugin.c b/gcc/plugin.c
+index d47fa512a..469bab2a8 100644
+--- a/gcc/plugin.c
++++ b/gcc/plugin.c
+@@ -41,7 +41,10 @@ along with GCC; see the file COPYING3.  If not see
+ #ifndef NOMINMAX
+ #define NOMINMAX
+ #endif
++#pragma push_macro("abort")
++#undef abort
+ #include <windows.h>
++#pragma pop_macro("abort")
+ #endif
+ 
+ #define GCC_PLUGIN_STRINGIFY0(X) #X
+diff --git a/gcc/prefix.c b/gcc/prefix.c
+index 747c09de6..d85041066 100644
+--- a/gcc/prefix.c
++++ b/gcc/prefix.c
+@@ -67,7 +67,10 @@ License along with GCC; see the file COPYING3.  If not see
+ #include "system.h"
+ #include "coretypes.h"
+ #if defined(_WIN32) && defined(ENABLE_WIN32_REGISTRY)
++#pragma push_macro("abort")
++#undef abort
+ #include <windows.h>
++#pragma pop_macro("abort")
+ #endif
+ #include "prefix.h"
+ #include "common/common-target.h"
+diff --git a/gcc/pretty-print.c b/gcc/pretty-print.c
+index ade1933f8..1a32c4bf8 100644
+--- a/gcc/pretty-print.c
++++ b/gcc/pretty-print.c
+@@ -41,7 +41,10 @@ along with GCC; see the file COPYING3.  If not see
+ 
+ #include <io.h>
+ #define WIN32_LEAN_AND_MEAN 1
++#pragma push_macro("abort")
++#undef abort
+ #include <windows.h>
++#pragma pop_macro("abort")
+ 
+ /* Write all bytes in [s,s+n) into the specified stream.
+    Errors are ignored.  */

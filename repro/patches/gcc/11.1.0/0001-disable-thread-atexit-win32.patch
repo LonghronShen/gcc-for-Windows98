@@ -1,0 +1,26 @@
+diff --git a/libstdc++-v3/config/os/mingw32-w64/os_defines.h b/libstdc++-v3/config/os/mingw32-w64/os_defines.h
+index e0eb7623f..281451110 100644
+--- a/libstdc++-v3/config/os/mingw32-w64/os_defines.h
++++ b/libstdc++-v3/config/os/mingw32-w64/os_defines.h
+@@ -83,7 +83,7 @@
+ // Enable use of GetModuleHandleEx (requires Windows XP/2003) in
+ // __cxa_thread_atexit to prevent modules from being unloaded before
+ // their dtors are called
+-#define _GLIBCXX_THREAD_ATEXIT_WIN32 1
++/* win98 repro: disable _GLIBCXX_THREAD_ATEXIT_WIN32 */
+ 
+ // See libstdc++/59807
+ #define _GTHREAD_USE_MUTEX_INIT_FUNC 1
+diff --git a/libstdc++-v3/config/os/newlib/os_defines.h b/libstdc++-v3/config/os/newlib/os_defines.h
+index bbf5794d9..18e0cdeae 100644
+--- a/libstdc++-v3/config/os/newlib/os_defines.h
++++ b/libstdc++-v3/config/os/newlib/os_defines.h
+@@ -51,7 +51,7 @@
+ // Enable use of GetModuleHandleEx (requires Windows XP/2003) in
+ // __cxa_thread_atexit to prevent modules from being unloaded before
+ // their dtors are called
+-#define _GLIBCXX_THREAD_ATEXIT_WIN32 1
++/* win98 repro: disable _GLIBCXX_THREAD_ATEXIT_WIN32 */
+ 
+ // See libstdc++/69506
+ #define _GLIBCXX_USE_WEAK_REF 0

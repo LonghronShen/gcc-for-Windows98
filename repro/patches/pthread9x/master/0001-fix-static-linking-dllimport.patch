@@ -1,0 +1,14 @@
+diff --git a/include/pthread.h b/include/pthread.h
+index 93fe03a..e12e5a8 100644
+--- a/include/pthread.h
++++ b/include/pthread.h
+@@ -86,7 +86,8 @@
+ #ifdef IN_WINPTHREAD
+ #define WINPTHREAD_API __declspec(dllexport)
+ #else
+-#define WINPTHREAD_API __declspec(dllimport)
++/* Static linking: dllimport generates __imp__ refs with no DLL to resolve them. Leave WINPTHREAD_API empty so consumers (e.g. libstdc++-v3 with -DDLL_EXPORT) do not emit dllimport-style indirect calls. */
++#define WINPTHREAD_API
+ #endif
+ #else
+ #define WINPTHREAD_API

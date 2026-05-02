@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+# smoke-cmake-build.sh — Phase 3 smoke test: build repro/tests with CMake+Ninja using
+# either the cross or native toolchain, then verify every produced .exe is Windows 98
+# compatible (no UCRT imports, PE OS version ≤ 4.10) and runs correctly under Wine.
+#
+# Usage: smoke-cmake-build.sh <cross|native> [jobs]
+#   cross   — use /opt/cmake-toolchain/cross-toolchain.cmake
+#   native  — use /opt/cmake-toolchain/native-toolchain.cmake (wine wrappers as compiler)
+#
+# Runs inside the consumer container (/workspace = repro/).
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/common.sh"
+source "$ROOT_DIR/scripts/verifiers/pe-win98-check.sh"
+
+TOOLCHAIN_KIND="${1:-cross}"
+JOBS="${2:-$(nproc)}"
+
+case "$TOOLCHAIN_KIND" in
+    cross)
+        TOOLCHAIN_FILE="/opt/cmake-toolchain/cross-toolchain.cmake"
+        BUILD_DIR="/workspace/out/smoke-cross"
+        # Runtime DLLs for dynamically-linked cross-compiled binaries.
+        CROSS="${CROSS_PREFIX:-/opt/cross-toolchain}"
+        RUNTIME_DLL_DIR="$CROSS/i686-w64-mingw32/lib"
+        ;;
+    native)
+        TOOLCHAIN_FILE="/opt/cmake-toolchain/native-toolchain.cmake"
+        BUILD_DIR="/workspace/out/smoke-native"
+        NATIVE="${NATIVE_PREFIX:-/opt/native-toolset}"
+        RUNTIME_DLL_DIR="$NATIVE/i686-w64-mingw32/lib"
+        ;;
+    *)
+        die "Unknown toolchain kind: $TOOLCHAIN_KIND (expected 'cross' or 'native')"
+        ;;
+esac
+
+TEST_SRC="/workspace/tests"
+OUTPUT_BIN_DIR="$BUILD_DIR/out"
+
+PASS_PE=0; FAIL_PE=0
+PASS_RUN=0; FAIL_RUN=0
+
+# ── Helper: Win98 PE import check ────────────────────────────────────────────
+check_pe_win98() {
+    local exe="$1"
+    local rel="${exe#$BUILD_DIR/}"
+
+    pe_check_win98 "$exe"
+    case "$PE_CHECK_RESULT" in
+        pass)
+            local ver_tag=""
+            [[ -n "$PE_CHECK_OS_MAJOR" ]] && ver_tag="  OS=$PE_CHECK_OS_MAJOR.${PE_CHECK_OS_MINOR:-0}"
+            log "[OK-PE]   $rel$ver_tag"
+            (( PASS_PE++ )) || true
+            ;;
+        fail)
+            log "[FAIL-PE] $rel  — $PE_CHECK_FAIL_REASON"
+            (( FAIL_PE++ )) || true
+            ;;
+        skip)
+            log "[SKIP-PE] $rel  (not a PE or objdump failed)"
+            ;;
+    esac
+}
+
+# ── Helper: Wine execution check ─────────────────────────────────────────────
+run_under_wine() {
+    local exe="$1"
+    local rel="${exe#$BUILD_DIR/}"
+
+    # Wine needs runtime DLLs beside the exe or in WINEPATH.
+    # Copy missing runtime DLLs to the exe's directory (idempotent).
+    local exe_dir
+    exe_dir="$(dirname "$exe")"
+    for dll in libgcc_s_dw2-1.dll libstdc++-6.dll libssp-0.dll libquadmath-0.dll; do
+        local src="$RUNTIME_DLL_DIR/$dll"
+        if [[ -f "$src" && ! -f "$exe_dir/$dll" ]]; then
+            cp -f "$src" "$exe_dir/$dll"
+        fi
+    done
+
+    local wine_out
+    local wine_rc=0
+    local cross_lib="${CROSS_PREFIX:-/opt/cross-toolset}/i686-w64-mingw32/lib"
+    local winepath
+    # Convert Unix path to Windows-style for Wine
+    winepath="Z:${cross_lib//\//\\}"
+    # Run each test in a dedicated tmpdir so that any files the test writes
+    # (e.g. fstream_smoke.txt) stay out of the workspace/source tree.
+    local wine_tmpdir
+    wine_tmpdir="$(mktemp -d)"
+    wine_out=$(cd "$wine_tmpdir" && WINEPREFIX="${WINEPREFIX:-/opt/.wine}"
+        WINEPATH="$winepath"
+        WINEDEBUG=-all \
+        wine "$exe" 2>&1) || wine_rc=$?
+    rm -rf "$wine_tmpdir"
+
+    if [[ "$wine_rc" -eq 0 ]]; then
+        log "[OK-RUN]  $rel"
+        (( PASS_RUN++ )) || true
+    else
+        log "[FAIL-RUN] $rel  — wine exit $wine_rc"
+        log "  output: $(printf '%s\n' "$wine_out" | head -5)"
+        (( FAIL_RUN++ )) || true
+    fi
+}
+
+# ── Build ─────────────────────────────────────────────────────────────────────
+log "=== CMake+Ninja build [$TOOLCHAIN_KIND toolchain] ==="
+log "Source : $TEST_SRC"
+log "Build  : $BUILD_DIR"
+log "Toolchain file: $TOOLCHAIN_FILE"
+
+if [[ ! -f "$TOOLCHAIN_FILE" ]]; then
+    die "Toolchain file not found: $TOOLCHAIN_FILE"
+fi
+
+mkdir -p "$BUILD_DIR"
+
+cmake -S "$TEST_SRC" \
+      -B "$BUILD_DIR" \
+      -G Ninja \
+      -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
+      -DCMAKE_BUILD_TYPE=Release \
+      --log-level=WARNING
+
+cmake --build "$BUILD_DIR" --parallel "$JOBS"
+
+log "Build complete. Scanning $OUTPUT_BIN_DIR/ ..."
+
+if [[ ! -d "$OUTPUT_BIN_DIR" ]]; then
+    die "Expected output directory not found: $OUTPUT_BIN_DIR"
+fi
+
+# ── Verify and run every produced .exe ───────────────────────────────────────
+log "=== Win98 PE compatibility check (built binaries) ==="
+while IFS= read -r -d '' exe; do
+    check_pe_win98 "$exe"
+done < <(find "$OUTPUT_BIN_DIR" -type f -iname "*.exe" -print0 | sort -z)
+
+log "=== Wine execution check ==="
+while IFS= read -r -d '' exe; do
+    run_under_wine "$exe"
+done < <(find "$OUTPUT_BIN_DIR" -type f -iname "*.exe" -print0 | sort -z)
+
+# ── Summary ───────────────────────────────────────────────────────────────────
+log "=== [$TOOLCHAIN_KIND] PE check:  $PASS_PE passed, $FAIL_PE failed ==="
+log "=== [$TOOLCHAIN_KIND] Wine run:  $PASS_RUN passed, $FAIL_RUN failed ==="
+
+TOTAL_FAIL=$(( FAIL_PE + FAIL_RUN ))
+if [[ "$TOTAL_FAIL" -gt 0 ]]; then
+    die "CMake build smoke test FAILED for $TOOLCHAIN_KIND toolchain ($TOTAL_FAIL failures)"
+fi

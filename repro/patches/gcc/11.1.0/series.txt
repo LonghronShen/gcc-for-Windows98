@@ -1,0 +1,5 @@
+0001-disable-thread-atexit-win32.patch
+0002-remove-atexit-thread-dll-handling.patch
+# 0003 — handled via configure cache variables (glibcxx_cv_LFS=no, etc.)
+0004-fix-msvcrt-quick-exit-detection.patch
+0005-fix-windows-h-abort-macro-conflict.patch

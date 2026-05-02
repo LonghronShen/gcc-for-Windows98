@@ -1,0 +1,32 @@
+services:
+  toolchain-builder:
+    build:
+      context: .
+      dockerfile: docker/toolchain-builder.Dockerfile
+    working_dir: /work
+    env_file:
+      - .env
+    environment:
+      - JOBS=${JOBS:-2}
+      - TARGET=${TARGET:-i686-w64-mingw32}
+      - PREFIX=${PREFIX:-/work/out/toolchain}
+    volumes:
+      - ./:/work
+    tty: true
+    stdin_open: true
+
+  consumer:
+    image: ${PROJECT_NAME}-consumer:latest
+    build:
+      context: .
+      dockerfile: docker/consumer.Dockerfile
+    working_dir: /workspace
+    environment:
+      - TARGET=${TARGET:-i686-w64-mingw32}
+      - CROSS_PREFIX=/opt/cross-toolset
+      - NATIVE_PREFIX=/opt/native-toolset
+      - PATH=/opt/cross-toolset/bin:/opt/native-toolset/bin:${PATH}
+    volumes:
+      - ./:/workspace
+    tty: true
+    stdin_open: true
