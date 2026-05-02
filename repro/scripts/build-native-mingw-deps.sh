@@ -27,7 +27,9 @@ ensure_prereq_sources() {
   fi
 
   log "populating GCC prerequisite sources via contrib/download_prerequisites"
-  run_logged build-native-mingw-deps.log bash "$GCC_SRC/contrib/download_prerequisites" --directory="$GCC_SRC" --no-isl
+  # Must cd to GCC_SRC first because download_prerequisites checks ./gcc/BASE-VER from CWD,
+  # not from --directory. The container's WORKDIR is /work, but GCC source is at /work/src/gcc.
+  run_logged build-native-mingw-deps.log bash -c "cd '$GCC_SRC' && bash '$GCC_SRC/contrib/download_prerequisites' --directory='$GCC_SRC' --no-isl"
 
   require_dir "$GCC_SRC/gmp" "Missing GCC prerequisite source: $GCC_SRC/gmp"
   require_dir "$GCC_SRC/mpfr" "Missing GCC prerequisite source: $GCC_SRC/mpfr"
