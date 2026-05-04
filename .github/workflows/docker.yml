@@ -55,7 +55,7 @@ jobs:
         with:
           name: gcc-win98-consumer-${{ steps.version.outputs.result }}
           path: |
-            repro/out/package/*.tar.gz
+            repro/out/package/*.tar.*
             repro/out/package/*.json
           if-no-files-found: error
 
