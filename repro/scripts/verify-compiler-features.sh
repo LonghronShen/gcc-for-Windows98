@@ -48,11 +48,13 @@ PTHREAD_TEST_SRC="$ROOT_DIR/tests/smoke-c/thread_test.c"
 STD_THREAD_TEST_SRC="$ROOT_DIR/tests/smoke-cpp/hello_thread.cpp"
 C_FILE_IO_TEST_SRC="$ROOT_DIR/tests/smoke-c/file_io_test.c"
 CPP_FSTREAM_TEST_SRC="$ROOT_DIR/tests/smoke-cpp/hello_fstream.cpp"
+WELL_KNOWN_GLOBALS_TEST_SRC="$ROOT_DIR/tests/smoke-c/well_known_global_symbols.c"
 
 THREADING_MODEL="unverified"
 PTHREAD_STATUS="unverified"
 STD_THREAD_STATUS="unverified"
 FILE_IO_STATUS="unverified"
+CRT_GLOBALS_STATUS="unverified"
 
 detect_thread_model() {
   local compiler_output
@@ -89,6 +91,28 @@ verify_file_io_compiles() {
   fi
 }
 
+verify_crt_global_symbols() {
+  local probe_obj="$WORK_DIR/crt_global_symbols_probe.o"
+  local probe_nm="$WORK_DIR/crt_global_symbols_probe.nm"
+
+  if ! "${CC_CMD[@]}" -c -O0 -o "$probe_obj" "$WELL_KNOWN_GLOBALS_TEST_SRC" >/dev/null 2>&1; then
+    return
+  fi
+
+  if ! command -v nm >/dev/null 2>&1; then
+    return
+  fi
+
+  nm "$probe_obj" > "$probe_nm"
+
+  # These UCRT-style global imports indicate CRT-default mismatch.
+  if grep -Eq '(__imp____timezone|__imp____daylight|__imp____tzname)' "$probe_nm"; then
+    return
+  fi
+
+  CRT_GLOBALS_STATUS="verified"
+}
+
 enforce_all_verified() {
   local failed=0
 
@@ -108,6 +132,10 @@ enforce_all_verified() {
     log "ERROR: file I/O check failed ($FILE_IO_STATUS)"
     failed=1
   fi
+  if [[ "$CRT_GLOBALS_STATUS" != "verified" ]]; then
+    log "ERROR: CRT global symbol check failed ($CRT_GLOBALS_STATUS)"
+    failed=1
+  fi
 
   if [[ $failed -ne 0 ]]; then
     die "compiler feature verification failed for $MODE"
@@ -118,6 +146,7 @@ detect_thread_model
 verify_pthread
 verify_std_thread
 verify_file_io_compiles
+verify_crt_global_symbols
 enforce_all_verified
 
 cat > "$FEATURES_PATH" <<EOF
@@ -125,10 +154,11 @@ cat > "$FEATURES_PATH" <<EOF
   "threading_model": "$THREADING_MODEL",
   "pthread": "$PTHREAD_STATUS",
   "std_thread": "$STD_THREAD_STATUS",
-  "file_io": "$FILE_IO_STATUS"
+  "file_io": "$FILE_IO_STATUS",
+  "crt_global_symbols": "$CRT_GLOBALS_STATUS"
 }
 EOF
 
 mark_done "$STEP_NAME"
-log "compiler features ($MODE): threading_model=$THREADING_MODEL, pthread=$PTHREAD_STATUS, std_thread=$STD_THREAD_STATUS, file_io=$FILE_IO_STATUS"
+log "compiler features ($MODE): threading_model=$THREADING_MODEL, pthread=$PTHREAD_STATUS, std_thread=$STD_THREAD_STATUS, file_io=$FILE_IO_STATUS, crt_global_symbols=$CRT_GLOBALS_STATUS"
 log "wrote $FEATURES_PATH"

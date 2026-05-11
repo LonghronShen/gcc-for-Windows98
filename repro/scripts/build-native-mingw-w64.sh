@@ -27,6 +27,7 @@ pushd "$BUILD_DIR/headers"
 run_logged native-mingw-headers.log "$SRC_DIR/mingw-w64-headers/configure" \
     --host=$TARGET \
     --prefix="$PREFIX" \
+    --with-default-msvcrt=msvcrt \
     --enable-sdk=all
 
 run_logged native-mingw-headers.log make install
@@ -44,7 +45,7 @@ run_logged native-mingw-crt.log "$SRC_DIR/mingw-w64-crt/configure" \
     --host=$TARGET \
     --prefix="$PREFIX" \
     --with-sysroot="$PREFIX" \
-    --with-default-msvcrt=msvcrt-os \
+    --with-default-msvcrt=msvcrt \
     CC="$CROSS_BIN_DIR/i686-w64-mingw32-gcc" \
     AR="$CROSS_BIN_DIR/i686-w64-mingw32-ar" \
     RANLIB="$CROSS_BIN_DIR/i686-w64-mingw32-ranlib"
