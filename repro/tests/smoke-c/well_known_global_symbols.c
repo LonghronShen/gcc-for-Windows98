@@ -12,3 +12,5 @@ int probe(void) {
   (void)env;
   return 0;
 }
+
+int main() { return probe(); }
